@@ -1,0 +1,22 @@
+{
+  "name": "perf-analysis-library",
+  "version": "1.0.0",
+  "description": "it's measure web application TTFB, DOMLoad, Window Load and other analytics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guvenaltunsoyy/perf-analysis-js-library.git"
+  },
+  "keywords": [
+    "performance"
+  ],
+  "author": "guvenaltunsoy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guvenaltunsoyy/perf-analysis-js-library/issues"
+  },
+  "homepage": "https://github.com/guvenaltunsoyy/perf-analysis-js-library#readme"
+}
