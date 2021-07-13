@@ -1,8 +1,8 @@
-const NAV_API_URL =
+const NAVS_API_URL =
 	'https://perf-analysis-api.herokuapp.com/v1/navigations/add';
-const RESOURCE_API_URL =
+const RESOURCES_API_URL =
 	'https://perf-analysis-api.herokuapp.com/v1/resources/add';
-const PAINT_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
+const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
 const postData = (url, data) =>
 	fetch(url, {
 		method: 'POST',
@@ -11,18 +11,30 @@ const postData = (url, data) =>
 			'Content-Type': 'application/json',
 		},
 	}).then((res) => res.json());
-const postPaints = () =>
+const postPaints = () => {
+	let paints = []
 	performance.getEntriesByType('paint').forEach((paint) => {
-		postData(PAINT_API_URL, paint);
+		paints.push(paint)
 	});
-const postNavigations = () =>
+	postData(PAINTS_API_URL, paints);
+
+}
+const postNavigations = (otherNavigations) => {
+	let navs =[]
 	performance.getEntriesByType('navigation').forEach((navigation) => {
-		postData(NAV_API_URL, navigation);
+		navs.push(navigation);
 	});
-const postResources = () =>
+	postData(NAVS_API_URL, navs.concat(otherNavigations));
+}
+const postResources = () => {
+	let resources=[];
 	performance.getEntriesByType('resource').forEach((resource) => {
-		postData(RESOURCE_API_URL, resource);
+		if(!resource.name.includes('perf-analysis')){
+			resources.push(resource);
+		}
 	});
+	postData(RESOURCES_API_URL, resources);
+}
 
 function startAnalysis() {
 	const browser = {
@@ -35,40 +47,41 @@ function startAnalysis() {
 	if (browser.isEdge || browser.isIE) return;
 
 	console.log('analysis starting');
+	let navigationEvents = [];
 	if (performance) {
 		window.addEventListener('load', (event) => {
-			postResources();
-			postNavigations();
-			postPaints();
-			postData(NAV_API_URL, {
+			navigationEvents.push({
 				name: 'navigation',
 				initiatorType: 'window_load',
 				responseStart: event.timeStamp,
 				responseEnd: 0,
 				fetchStart: 0,
-			});
+			})
+			postResources();
+			postNavigations(navigationEvents);
+			postPaints();
 		});
 	}
 
 	document.addEventListener('readystatechange', (event) => {
-		postData(NAV_API_URL, {
+		navigationEvents.push({
 			name: 'navigation',
 			initiatorType: 'readystatechange',
 			type: document.readyState,
 			responseStart: event.timeStamp,
 			responseEnd: 0,
 			fetchStart: 0,
-		});
+		})
 	});
 
 	document.addEventListener('DOMContentLoaded', (event) => {
-		postData(NAV_API_URL, {
+		navigationEvents.push({
 			name: 'navigation',
 			initiatorType: 'DOMContentLoaded',
 			responseStart: event.timeStamp,
 			responseEnd: 0,
 			fetchStart: 0,
-		});
+		})
 	});
 }
 
