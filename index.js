@@ -1,10 +1,5 @@
-const NAVS_API_URL =
-	'https://perf-analysis-api.herokuapp.com/v1/navigations/add';
-const RESOURCES_API_URL =
-	'https://perf-analysis-api.herokuapp.com/v1/resources/add';
-const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
-const postData = (url, data) =>
-	fetch(url, {
+const postData = (type, data) =>
+	fetch(`https://perf-analysis-api.herokuapp.com/v1/${type}/add`, {
 		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {
@@ -16,7 +11,7 @@ const postPaints = () => {
 	performance.getEntriesByType('paint').forEach((paint) => {
 		paints.push(paint)
 	});
-	postData(PAINTS_API_URL, paints);
+	postData("paints", paints);
 
 }
 const postNavigations = (otherNavigations) => {
@@ -24,7 +19,7 @@ const postNavigations = (otherNavigations) => {
 	performance.getEntriesByType('navigation').forEach((navigation) => {
 		navs.push(navigation);
 	});
-	postData(NAVS_API_URL, navs.concat(otherNavigations));
+	postData("navigations", navs.concat(otherNavigations));
 }
 const postResources = () => {
 	let resources=[];
@@ -33,7 +28,7 @@ const postResources = () => {
 			resources.push(resource);
 		}
 	});
-	postData(RESOURCES_API_URL, resources);
+	postData("resources", resources);
 }
 
 function startAnalysis() {
