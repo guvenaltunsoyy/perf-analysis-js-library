@@ -39,14 +39,10 @@ const postResources = () => {
 function startAnalysis() {
 	const browser = {
 		isEdge: /Edge/.test(navigator.userAgent),
-		isFirefox: /Firefox/.test(navigator.userAgent),
-		isChrome: /Google Inc/.test(navigator.vendor),
-		isChromeIOS: /CriOS/.test(navigator.userAgent),
 		isIE: /Trident/.test(navigator.userAgent),
 	};
 	if (browser.isEdge || browser.isIE) return;
 
-	console.log('analysis starting');
 	let navigationEvents = [];
 	if (performance) {
 		window.addEventListener('load', (event) => {
@@ -54,7 +50,6 @@ function startAnalysis() {
 				name: 'navigation',
 				initiatorType: 'window_load',
 				responseStart: event.timeStamp,
-				responseEnd: 0,
 				fetchStart: 0,
 			})
 			postResources();
@@ -69,7 +64,6 @@ function startAnalysis() {
 			initiatorType: 'readystatechange',
 			type: document.readyState,
 			responseStart: event.timeStamp,
-			responseEnd: 0,
 			fetchStart: 0,
 		})
 	});
@@ -79,7 +73,6 @@ function startAnalysis() {
 			name: 'navigation',
 			initiatorType: 'DOMContentLoaded',
 			responseStart: event.timeStamp,
-			responseEnd: 0,
 			fetchStart: 0,
 		})
 	});
