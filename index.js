@@ -6,10 +6,10 @@ const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
 const postData = (url, data) =>
 	fetch(url, {
 		method: 'POST',
-		mode: 'no-cors',
 		body: JSON.stringify(data),
 		headers: {
 			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin' :'*'
 		},
 	}).then((res) => res.json());
 const postPaints = () => {
