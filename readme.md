@@ -1,4 +1,5 @@
 # installation
+[https://www.npmjs.com/package/perf-analysis-library]()
 
 ```
 npm install perf-analysis-library
