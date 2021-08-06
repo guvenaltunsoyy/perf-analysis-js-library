@@ -3,15 +3,9 @@ const NAVS_API_URL =
 const RESOURCES_API_URL =
 	'https://perf-analysis-api.herokuapp.com/v1/resources/add';
 const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
-const postData = (url, data) =>
-	fetch(url, {
-		method: 'POST',
-		body: JSON.stringify(data),
-		headers: {
-			'Content-Type': 'application/json',
-			'Access-Control-Allow-Origin' :'*'
-		},
-	}).then((res) => res.json());
+
+
+const postData = (url, data) => navigator.sendBeacon(url, JSON.stringify(data, null, 2));
 const postPaints = () => {
 	let paints = []
 	performance.getEntriesByType('paint').forEach((paint) => {
