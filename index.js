@@ -6,7 +6,10 @@ const RESOURCES_API_URL =
 const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
 
 
-const postData = (url, data) => navigator.sendBeacon(url, JSON.stringify(data));
+const postData = (url, data) => {
+	const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
+	return navigator.sendBeacon(url,blob);
+}
 const postPaints = () => {
 	let paints = []
 	performance.getEntriesByType('paint').forEach((paint) => {
