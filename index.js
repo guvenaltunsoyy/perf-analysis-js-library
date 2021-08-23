@@ -1,3 +1,4 @@
+const {schedulePendingEvents} = require("./events");
 const NAVS_API_URL =
 	'https://perf-analysis-api.herokuapp.com/v1/navigations/add';
 const RESOURCES_API_URL =
@@ -5,7 +6,7 @@ const RESOURCES_API_URL =
 const PAINTS_API_URL = 'https://perf-analysis-api.herokuapp.com/v1/paints/add';
 
 
-const postData = (url, data) => navigator.sendBeacon(url, JSON.stringify(data, null, 2));
+const postData = (url, data) => navigator.sendBeacon(url, JSON.stringify(data));
 const postPaints = () => {
 	let paints = []
 	performance.getEntriesByType('paint').forEach((paint) => {
@@ -47,16 +48,16 @@ function startAnalysis() {
 				responseStart: event.timeStamp,
 				fetchStart: 0,
 			})
-			postResources();
-			postNavigations(navigationEvents);
-			postPaints();
+			schedulePendingEvents(postResources)
+			schedulePendingEvents(postPaints)
+			schedulePendingEvents(()=> postNavigations(navigationEvents))
 		});
 	}
 
 	document.addEventListener('readystatechange', (event) => {
 		navigationEvents.push({
 			name: 'navigation',
-			initiatorType: 'readystatechange',
+			initiatorType: 'readystatechange '+document.readyState,
 			type: document.readyState,
 			responseStart: event.timeStamp,
 			fetchStart: 0,
